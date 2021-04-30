@@ -1,0 +1,18 @@
+add_server 45624
+add_server 47838
+add_server 4974
+store "2227008d3af215fef3a827b5e377bd9c" "trustedsnap Solid Women's Tunic"
+add_server 89305
+retrieve "2227008d3af215fef3a827b5e377bd9c"
+store "d60e567db00840c3ca46251f108cff1b" "EIRA Casual Printed Women's Kurti"
+retrieve "2227008d3af215fef3a827b5e377bd9c"
+remove_server 4974
+add_server 25301
+store "5834e87253f72c0063d2d9baca38d573" "SportsHouse makhan chor krishna Radium Showpiece  -  23 cm"
+add_server 58225
+retrieve "2227008d3af215fef3a827b5e377bd9c"
+store "6634de7b39a5b0658c74ab098450096d" "D-Link DIR-816 Wireless AC750 Dual Band Router"
+store "0c82b9c474b0917dd6eaaa77e19d753a" "FashionPedia Canvas Shoes, Sneakers"
+retrieve "6634de7b39a5b0658c74ab098450096d"
+store "e8c42ea6c7944c0d77beca6db7ac8623" "Grafion by Grafion - Comfort Feel Women's Full Coverage Bra"
+retrieve "e8c42ea6c7944c0d77beca6db7ac8623"
