@@ -47,7 +47,7 @@ void update_server(server_memory *dest, server_memory *src) {
 	if (dest->id == src->id) {
 		return;
 	}
-	for (int i = 0 ; i < src->ht->hmax ; i++) {
+	for (unsigned int i = 0 ; i < src->ht->hmax ; i++) {
 		ll_node_t *curr = (src->ht->buckets[i])->head, *kill;
 		int runner = 0;
 		char *key;
@@ -70,7 +70,7 @@ void update_server(server_memory *dest, server_memory *src) {
 }
 
 void update_and_free_server(server_memory *dest, server_memory *src) {
-	for (int i = 0 ; i < src->ht->hmax ; i++) {
+	for (unsigned int i = 0 ; i < src->ht->hmax ; i++) {
 		ll_node_t *curr = (src->ht->buckets[i])->head, *kill;
 		char *key;
 		while (curr != NULL)
