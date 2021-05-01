@@ -1,0 +1,25 @@
+add_server 48311
+add_server 6448
+add_server 65541
+add_server 19210
+add_server 56541
+add_server 42972
+add_server 70947
+add_server 89697
+add_server 7680
+add_server 45547
+store "b1a7bb1a04c229228f92be1528360986" "Oxolloxo Women's Printed Casual Shirt"
+store "7f49f4152cbcd8703da1f283cd656afd" "Muquam Stretchable Bandeau Women's Tube Bra"
+retrieve "7f49f4152cbcd8703da1f283cd656afd"
+add_server 46832
+retrieve "b1a7bb1a04c229228f92be1528360986"
+retrieve "7f49f4152cbcd8703da1f283cd656afd"
+remove_server 45547
+retrieve "b1a7bb1a04c229228f92be1528360986"
+retrieve "b1a7bb1a04c229228f92be1528360986"
+retrieve "7f49f4152cbcd8703da1f283cd656afd"
+add_server 56507
+retrieve "b1a7bb1a04c229228f92be1528360986"
+retrieve "b1a7bb1a04c229228f92be1528360986"
+retrieve "b1a7bb1a04c229228f92be1528360986"
+remove_server 7680

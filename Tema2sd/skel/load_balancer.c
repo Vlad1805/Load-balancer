@@ -35,7 +35,7 @@ dll_get_hash(doubly_linked_list_t *list, unsigned int hash)
     DIE(list == NULL, "Lista nealocata!");
     dll_node_t* curr = list->head;
     if (hash > ((server_memory*)list->head->prev->data)->hash) {
-        //printf("    %u     %u   %d\n", hash, ((server_memory*)list->head->prev->data)->hash, ((server_memory*)list->head->prev)->id);
+        printf("    %u     %u   %d\n", hash, ((server_memory*)list->head->prev->data)->hash, ((server_memory*)list->head->data)->id);
         return list->head;
     }
     while (((server_memory*)curr->data)->hash < hash) {
@@ -64,7 +64,7 @@ dll_add_server(doubly_linked_list_t *list, unsigned int hash, const void* new_da
         return list->head;
     }
     if (((server_memory*)list->head->data)->hash > hash) {
-        printf("DA\n");
+        //printf("DA\n");
         new->next = list->head;
         new->prev = list->head->prev;
         list->head->prev->next = new;
@@ -97,7 +97,7 @@ dll_add_server(doubly_linked_list_t *list, unsigned int hash, const void* new_da
 void loader_store(load_balancer* main, char* key, char* value, int* server_id) {
 	unsigned int hash = hash_function_key(key);
     dll_node_t *node = dll_get_hash(main->hash_ring, hash);
-    *server_id = ((server_memory*)node->data)->id;
+    *server_id = ((server_memory*)node->data)->id % REPLICA;
     printf("%u %u %d\n", hash, ((server_memory*)node->data)->hash, ((server_memory*)node->data)->id);
     server_store((server_memory*)node->data, key, value);
 }
@@ -106,8 +106,8 @@ void loader_store(load_balancer* main, char* key, char* value, int* server_id) {
 char* loader_retrieve(load_balancer* main, char* key, int* server_id) {
 	unsigned int hash = hash_function_key(key);
     dll_node_t *node = dll_get_hash(main->hash_ring, hash);
-    *server_id = ((server_memory*)node->data)->id;
-    //printf("SERVER ID %d\n", *server_id);
+    *server_id = ((server_memory*)node->data)->id % REPLICA;
+    printf("SERVER ID %d %u\n", *server_id, hash);
 	return server_retrieve((server_memory*)node->data, key);
 }
 
@@ -116,78 +116,95 @@ void __loader_add_server(load_balancer* main, int server_id) {
     server->hash = hash_function_servers(&server_id);
     server->id = server_id;
     dll_node_t *node = dll_add_server(main->hash_ring, server->hash, server);
+    free(server);
     update_server((server_memory*)node->data, (server_memory*)node->next->data);
-    dll_node_t *curr = main->hash_ring->head;
-    for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
-        printf("%d ", ((server_memory*)curr->data)->id);
-        curr = curr->next;
-    }
-    printf("\n");
-    curr = main->hash_ring->head;
-    for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
-        printf("%u ", ((server_memory*)curr->data)->hash);
-        curr = curr->next;
-    }
-    printf("\n");
+    // dll_node_t *curr = main->hash_ring->head;
+    // for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
+    //     printf("%d ", ((server_memory*)curr->data)->id);
+    //     curr = curr->next;
+    // }
+    // printf("\n");
+    // curr = main->hash_ring->head;
+    // for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
+    //     printf("%u ", ((server_memory*)curr->data)->hash);
+    //     curr = curr->next;
+    // }
+    // printf("\n");
 }
 
 void loader_add_server(load_balancer* main, int server_id) {
 	__loader_add_server(main, server_id);
     __loader_add_server(main, server_id + REPLICA);
     __loader_add_server(main, server_id + 2 * REPLICA);
-}
-
-void __loader_remove_server(load_balancer *main, int server_id) {
-    unsigned int hash = hash_function_servers(&server_id);
-    dll_node_t *node = dll_get_hash(main->hash_ring, hash);
-    printf("%d %d\n", (*(server_memory*)node->data).id, server_id);
-    update_and_free_server((server_memory*)node->next->data, (server_memory*)node->data);
-    node->prev->next = node->next;
-    node->next->prev = node->prev;
-    main->hash_ring->size -= 1;
     dll_node_t *curr = main->hash_ring->head;
     for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
         printf("%d ", ((server_memory*)curr->data)->id);
         curr = curr->next;
     }
     printf("\n");
-    curr = main->hash_ring->head;
-    for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
-        printf("%u ", ((server_memory*)curr->data)->hash);
-        curr = curr->next;
+    // curr = main->hash_ring->head;
+    // for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
+    //     printf("%u ", ((server_memory*)curr->data)->hash);
+    //     curr = curr->next;
+    // }
+    // printf("\n");
+}
+
+void __loader_remove_server(load_balancer *main, int server_id) {
+    unsigned int hash = hash_function_servers(&server_id);
+    //printf("%d \n", server_id);
+    dll_node_t *node = dll_get_hash(main->hash_ring, hash);
+    //printf("%d %d\n", (*(server_memory*)node->data).id, server_id);
+    update_and_free_server((server_memory*)node->next->data, (server_memory*)node->data);
+    if (main->hash_ring->head == node) {
+        main->hash_ring->head = node->next;
     }
-    printf("\n");
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+    main->hash_ring->size -= 1;
+    free(node);
+    // dll_node_t *curr = main->hash_ring->head;
+    // for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
+    //     printf("%d ", ((server_memory*)curr->data)->id);
+    //     curr = curr->next;
+    // }
+    // printf("\n");
+    // curr = main->hash_ring->head;
+    // for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
+    //     printf("%u ", ((server_memory*)curr->data)->hash);
+    //     curr = curr->next;
+    // }
+    // printf("\n");
 }
 
 void loader_remove_server(load_balancer* main, int server_id) {
 	__loader_remove_server(main, server_id);
     __loader_remove_server(main, (server_id + REPLICA) % (3 * REPLICA));
     __loader_remove_server(main, (server_id + 2 * REPLICA) % (3 * REPLICA));
-    dll_node_t *curr = main->hash_ring->head;
-    for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
-        printf("%d ", ((server_memory*)curr->data)->id);
-        curr = curr->next;
-    }
-    printf("\n");
-    curr = main->hash_ring->head;
-    for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
-        printf("%u ", ((server_memory*)curr->data)->hash);
-        curr = curr->next;
-    }
-    printf("\n");
+    // dll_node_t *curr = main->hash_ring->head;
+    // for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
+    //     printf("%d ", ((server_memory*)curr->data)->id);
+    //     curr = curr->next;
+    // }
+    // printf("\n");
+    // curr = main->hash_ring->head;
+    // for (unsigned int i = 0 ; i < main->hash_ring->size ; i++) {
+    //     printf("%u ", ((server_memory*)curr->data)->hash);
+    //     curr = curr->next;
+    // }
+    // printf("\n");
 }
 
 void free_load_balancer(load_balancer* main) {
     unsigned int pas = 0;
     dll_node_t *kill, *next;
     kill = main->hash_ring->head;
-    while (pas < main->hash_ring->size) {
-        next = kill->next;
+    while (main->hash_ring->size) {
+        kill = dll_remove_nth_node(main->hash_ring, 0);
         free_server_memory((server_memory*)kill->data);
         free(kill);
-        kill = next;
-        pas++;
     }
+    //printf("Galeti: %d\n", pas);
     free(main->hash_ring);
     free(main); 
 }

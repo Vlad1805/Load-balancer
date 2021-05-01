@@ -127,6 +127,7 @@ ht_put(hashtable_t *ht, void *key, unsigned int key_size,
     new.value = calloc(1, value_size);
     memcpy(new.key, key, key_size);
     memcpy(new.value,value, value_size);
+    printf("[   [   [   [   NU AJUNGE AICI???  %s \n", (char*)new.key);
     ht->size++;
     ll_add_nth_node(ht->buckets[hash], ht->buckets[hash]->size, &new);
 }
