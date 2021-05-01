@@ -92,7 +92,7 @@ void apply_requests(FILE* input_file) {
 			DIE(1, "unknown function call");
 		}
 	}
-
+	printf("DONE\n");
 	free_load_balancer(main_server);
 }
 

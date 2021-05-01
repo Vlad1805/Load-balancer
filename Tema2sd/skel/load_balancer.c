@@ -138,13 +138,41 @@ void loader_add_server(load_balancer* main, int server_id) {
 void __loader_remove_server(load_balancer *main, int server_id) {
     unsigned int hash = hash_function_servers(&server_id);
     dll_node_t *node = dll_get_hash(main->hash_ring, hash);
+    printf("%d %d\n", (*(server_memory*)node->data).id, server_id);
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+    main->hash_ring->size -= 1;
     update_and_free_server((server_memory*)node->data, (server_memory*)node->next->data);
+    dll_node_t *curr = main->hash_ring->head;
+    for (int i = 0 ; i < main->hash_ring->size ; i++) {
+        printf("%d ", ((server_memory*)curr->data)->id);
+        curr = curr->next;
+    }
+    printf("\n");
+    curr = main->hash_ring->head;
+    for (int i = 0 ; i < main->hash_ring->size ; i++) {
+        printf("%u ", ((server_memory*)curr->data)->hash);
+        curr = curr->next;
+    }
+    printf("\n");
 }
 
 void loader_remove_server(load_balancer* main, int server_id) {
 	__loader_remove_server(main, server_id);
     __loader_remove_server(main, (server_id + REPLICA) % (3 * REPLICA));
     __loader_remove_server(main, (server_id + 2 * REPLICA) % (3 * REPLICA));
+    dll_node_t *curr = main->hash_ring->head;
+    for (int i = 0 ; i < main->hash_ring->size ; i++) {
+        printf("%d ", ((server_memory*)curr->data)->id);
+        curr = curr->next;
+    }
+    printf("\n");
+    curr = main->hash_ring->head;
+    for (int i = 0 ; i < main->hash_ring->size ; i++) {
+        printf("%u ", ((server_memory*)curr->data)->hash);
+        curr = curr->next;
+    }
+    printf("\n");
 }
 
 void free_load_balancer(load_balancer* main) {
