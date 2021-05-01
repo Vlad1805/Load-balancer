@@ -139,10 +139,10 @@ void __loader_remove_server(load_balancer *main, int server_id) {
     unsigned int hash = hash_function_servers(&server_id);
     dll_node_t *node = dll_get_hash(main->hash_ring, hash);
     printf("%d %d\n", (*(server_memory*)node->data).id, server_id);
+    update_and_free_server((server_memory*)node->next->data, (server_memory*)node->data);
     node->prev->next = node->next;
     node->next->prev = node->prev;
     main->hash_ring->size -= 1;
-    update_and_free_server((server_memory*)node->data, (server_memory*)node->next->data);
     dll_node_t *curr = main->hash_ring->head;
     for (int i = 0 ; i < main->hash_ring->size ; i++) {
         printf("%d ", ((server_memory*)curr->data)->id);

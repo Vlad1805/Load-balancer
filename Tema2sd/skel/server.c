@@ -53,12 +53,16 @@ void update_server(server_memory *dest, server_memory *src) {
 		char *key;
 		while (curr != NULL)
 		{
-			key = ((info*)curr->data)->key;
+			key = (char*)(((info*)curr->data)->key);
 			curr = curr->next;
 			unsigned int hash = hash_function_key(key);
 			if (hash < dest->hash || hash > src->hash) {
 				kill = ll_remove_nth_node(src->ht->buckets[i], runner);
-				server_store(dest, key, ((info*)kill->data)->value);
+				server_store(dest, key, (char*)(((info*)kill->data)->value));
+				free(((info*)kill->data)->key);
+				free(((info*)kill->data)->value);
+				free(kill->data);
+				free(kill);
 			}
 		runner += 1;
 		}
@@ -71,10 +75,15 @@ void update_and_free_server(server_memory *dest, server_memory *src) {
 		char *key;
 		while (curr != NULL)
 		{
-			key = ((info*)curr->data)->key;
+			key = (char*)((info*)curr->data)->key;
 			curr = curr->next;
 			kill = ll_remove_nth_node(src->ht->buckets[i], 0);
-			server_store(dest, key, ((info*)kill->data)->value);
+			printf("%d %s \n", src->id, (char*)((info*)kill->data)->value);
+			server_store(dest, key, (char*)((info*)kill->data)->value);
+			free(((info*)kill->data)->key);
+			free(((info*)kill->data)->value);
+			free(kill->data);
+			free(kill);
 		}
 		free(src->ht->buckets[i]);
 	}
