@@ -24,7 +24,6 @@ server_memory* init_server_memory() {
 }
 
 void server_store(server_memory* server, char* key, char* value) {
-	printf("Aici se adauga %d %s", server->id, value);
 	ht_put(server->ht, key, strlen(key) + 1, value, strlen(value) + 1);
 }
 
@@ -33,15 +32,28 @@ void server_remove(server_memory* server, char* key) {
 }
 
 char* server_retrieve(server_memory* server, char* key) {
-	printf("hello %d\n", server->id);
-	printf("%s AICI\n", (char*)ht_get(server->ht, key));
 	return (char*)ht_get(server->ht, key);
-	//return deep copy
 }
 
 void free_server_memory(server_memory* server) {
 	ht_free(server->ht);
 	free(server);
+}
+
+int check_update_server(server_memory *dest, server_memory *src, unsigned int hash)
+{
+	if (dest->hash < src->hash) {
+		if (hash < dest->hash) {
+			return 1;
+		} else if (hash > src->hash) {
+			return 1;
+		}
+		return 0;
+	}
+	if (hash > src->hash && hash < dest->hash) {
+		return 1;
+	}
+	return 0;
 }
 
 void update_server(server_memory *dest, server_memory *src) {
@@ -57,13 +69,14 @@ void update_server(server_memory *dest, server_memory *src) {
 			key = (char*)(((info*)curr->data)->key);
 			curr = curr->next;
 			unsigned int hash = hash_function_key(key);
-			if (hash < dest->hash || hash > src->hash) {
+			if (check_update_server(dest, src, hash)) {
 				kill = ll_remove_nth_node(src->ht->buckets[i], runner);
 				server_store(dest, key, (char*)(((info*)kill->data)->value));
 				free(((info*)kill->data)->key);
 				free(((info*)kill->data)->value);
 				free(kill->data);
 				free(kill);
+				runner--;
 			}
 		runner += 1;
 		}
@@ -79,7 +92,6 @@ void update_and_free_server(server_memory *dest, server_memory *src) {
 			key = (char*)((info*)curr->data)->key;
 			curr = curr->next;
 			kill = ll_remove_nth_node(src->ht->buckets[i], 0);
-			//printf("Vezi aici :		%d %s  catre %d\n", src->id, (char*)((info*)kill->data)->value, dest->id);
 			server_store(dest, key, (char*)((info*)kill->data)->value);
 			free(((info*)kill->data)->key);
 			free(((info*)kill->data)->value);
@@ -91,5 +103,4 @@ void update_and_free_server(server_memory *dest, server_memory *src) {
 	free(src->ht->buckets);
 	free(src->ht);
 	free(src);
-	//printf("ITS DONE\n");
 }
