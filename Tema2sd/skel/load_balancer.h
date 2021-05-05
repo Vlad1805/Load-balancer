@@ -1,4 +1,5 @@
-/* Copyright 2021 <> */
+// Copyright 2021 Stanciu Vlad
+
 #ifndef LOAD_BALANCER_H_
 #define LOAD_BALANCER_H_
 
@@ -60,4 +61,4 @@ void loader_add_server(load_balancer* main, int server_id);
 void loader_remove_server(load_balancer* main, int server_id);
 
 
-#endif  /* LOAD_BALANCER_H_ */
+#endif  // LOAD_BALANCER_H_

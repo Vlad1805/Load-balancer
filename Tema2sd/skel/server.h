@@ -4,7 +4,7 @@
 
 #define HASH_MAX 1000
 
-#include "data_structures/Hashtable.h"
+#include "Hashtable.h"
 
 typedef struct server_memory {
 	hashtable_t *ht;

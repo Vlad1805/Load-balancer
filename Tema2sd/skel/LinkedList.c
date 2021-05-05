@@ -1,9 +1,11 @@
+// Copyright 2021 Stanciu Vlad
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "LinkedList.h"
-#include "../utils.h"
+#include "utils.h"
 
 linked_list_t*
 ll_create(unsigned int data_size)
@@ -29,7 +31,6 @@ ll_add_nth_node(linked_list_t* list, unsigned int n, const void* new_data)
     ll_node_t *new, *curr;
     unsigned int pas = 1;
     DIE(list == NULL, "Lista inexistenta");
-    DIE(n < 0, "EROARE");
     curr = list->head;
     if (n > list->size) {
         n = list->size;
@@ -75,7 +76,6 @@ ll_remove_nth_node(linked_list_t* list, unsigned int n)
     DIE(list == NULL, "Lista nealocata!");
     unsigned int pas = 0;
     ll_node_t *kill, *prev;
-    DIE(n < 0 || list->size == 0 , "EROARE");
     if (n == 0) {
         ll_node_t *swap = list->head;
         list->head = list->head->next;
@@ -123,7 +123,7 @@ ll_free(linked_list_t** pp_list)
         kill = next;
     }
     free(*pp_list);
-    *pp_list = NULL; 
+    *pp_list = NULL;
 }
 
 /*

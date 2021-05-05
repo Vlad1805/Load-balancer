@@ -2,7 +2,6 @@ CC=gcc
 CFLAGS=-std=c99 -Wall -Wextra
 LOAD=load_balancer
 SERVER=server
-DS=data_structures
 LL=LinkedList
 DLL=CircularDoublyLinkedList
 HTB=Hashtable
@@ -23,14 +22,17 @@ $(SERVER).o: $(SERVER).c $(SERVER).h
 $(LOAD).o: $(LOAD).c $(LOAD).h
 	$(CC) $(CFLAGS) $^ -c
 
-$(LL).o: $(DS)/$(LL).c $(DS)/$(LL).h
+$(LL).o: $(LL).c $(LL).h
 	$(CC) $(CFLAGS) $^ -c
 
-$(DLL).o: $(DS)/$(DLL).c $(DS)/$(DLL).h
+$(DLL).o: $(DLL).c $(DLL).h
 	$(CC) $(CFLAGS) $^ -c
 
-$(HTB).o: $(DS)/$(HTB).c $(DS)/$(HTB).h
+$(HTB).o: $(HTB).c $(HTB).h
 	$(CC) $(CFLAGS) $^ -c
+
+Pack:
+	zip -FSr 313CA_Stanciu_Vlad_tema2.zip README Makefile *.c *.h
 
 clean:
 	rm -f *.o tema2 *.h.gch

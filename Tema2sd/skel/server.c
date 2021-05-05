@@ -1,4 +1,4 @@
-/* Copyright 2021 <> */
+/* Copyright 2021 Stanciu Vlad */
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -40,7 +40,13 @@ void free_server_memory(server_memory* server) {
 	free(server);
 }
 
-int check_update_server(server_memory *dest, server_memory *src, unsigned int hash)
+/*
+	return 1 if object should be in server dest
+	return 0 if object should remain in server src
+*/
+
+int check_update_server(server_memory *dest, server_memory *src,
+unsigned int hash)
 {
 	if (dest->hash < src->hash) {
 		if (hash < dest->hash) {
@@ -55,6 +61,12 @@ int check_update_server(server_memory *dest, server_memory *src, unsigned int ha
 	}
 	return 0;
 }
+
+/*
+	Keep in mind that dest and src must be neighbours.
+	Function called when server dest is added.
+	Checks all objects from src and moves them if they should be in dest.
+*/
 
 void update_server(server_memory *dest, server_memory *src) {
 	if (dest->id == src->id) {
@@ -82,6 +94,11 @@ void update_server(server_memory *dest, server_memory *src) {
 		}
 	}
 }
+
+/*
+	Function called when server src is removed.
+	Keep in mind that dest and src must be neighbours.
+*/
 
 void update_and_free_server(server_memory *dest, server_memory *src) {
 	for (unsigned int i = 0 ; i < src->ht->hmax ; i++) {

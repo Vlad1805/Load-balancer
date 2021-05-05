@@ -1,0 +1,15 @@
+Pentru implementarea problemei m-am folosit de hashmapuri si lista dublu inlantuita.
+
+Am gandit fiecare server ca o structura care contine un dictionar (aici stocam obiectele din server), o variabila hash in care se tine minte hashul serverului si o variabila id in care se tine minte id-ul serverului.
+Ultimele doua variabile sunt utile pentru reprezentarea hashringului.
+
+Pentru implementarea hashringului am folosit structura de date lista dublu inlantuita, pentru a pastra ideea de circularitate.
+Am considerat si structura de array, mai buna decat lista dublu inlantuita dpdv al cautarii unui element, dar am decis ca pentru aceasta problema este mai utila si mai usor de implementat lista dublu inlantuita.
+Dll nu prezinta probleme de eficientizare a memoriei in deosebire de array care ar avea nevoie de o funtie de realoc.
+Inserarea sau stergerea unui element se face fara a le afecta pe celelalte.
+Si in ultimul rand cel mai important motiv pentru care am ales dll este ca mi s-a parut mai logic. Astfel desi nu este la acelasi nivel de eficienta in majoritatea scenarilor (in cazuri particulare poate fi chiar mai eficienta) m-a ajutat sa scriu un cod mai lizibil si structurat.
+
+Hash ringul contine structuri de tip nod. In capmul data vom stoca un pointer catre un server. Hash ringul este stocat dupa hashul serverului. Id este tinut minte pentru outout.
+
+Asta este ideea centrala a problemei. Pentru informatii suplimentare am lasat comentarii in cod.
+(am incercat sa pastrez codul in engleza so sorry for my bad english)

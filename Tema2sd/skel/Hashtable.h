@@ -1,9 +1,7 @@
-/*
- * Hashtable.h
- * Alexandru-Cosmin Mihai
- */
-#ifndef __HASHTABLE_H
-#define __HASHTABLE_H
+// Copyright 2021 Stanciu Vlad
+
+#ifndef HASHTABLE_H_
+#define HASHTABLE_H_
 
 #include "LinkedList.h"
 
@@ -68,4 +66,4 @@ hash_function_int(void *a);
 unsigned int
 hash_function_string(void *a);
 
-#endif
+#endif  // HASHTABLE_H_

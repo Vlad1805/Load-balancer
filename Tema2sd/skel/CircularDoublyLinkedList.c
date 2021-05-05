@@ -1,9 +1,11 @@
+// Copyright 2021 Stanciu Vlad
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "CircularDoublyLinkedList.h"
-#include "../utils.h"
+#include "utils.h"
 
 typedef struct server_memory server_memory;
 
@@ -34,7 +36,7 @@ dll_create(unsigned int data_size)
 dll_node_t*
 dll_get_nth_node(doubly_linked_list_t* list, unsigned int n)
 {
-    int i;
+    unsigned int i;
     DIE(list == NULL, "Lista nealocata!");
     n = n % list->size;
     dll_node_t* curr = list->head;
@@ -54,12 +56,12 @@ dll_get_nth_node(doubly_linked_list_t* list, unsigned int n)
  * adaugam nodul nou la finalul listei. Daca n < 0, eroare.
  */
 void
-dll_add_nth_node(doubly_linked_list_t* list, unsigned int n, const void* new_data)
+dll_add_nth_node(doubly_linked_list_t* list, unsigned int n,
+const void* new_data)
 {
     dll_node_t *new, *curr;
     unsigned int pas = 1;
     DIE(list == NULL, "Lista inexistenta!");
-    DIE(n < 0, "EROARE");
     curr = list->head;
     if (n > list->size) {
         n = list->size;
@@ -121,7 +123,6 @@ dll_remove_nth_node(doubly_linked_list_t* list, unsigned int n)
     DIE(list == NULL, "Lista nealocata!");
     unsigned int pas = 0;
     dll_node_t *kill;
-    DIE(n < 0 || list->size == 0 , "EROARE");
     if (n == 0) {
         dll_node_t *swap = list->head;
         swap->prev->next = swap->next;
@@ -162,7 +163,7 @@ dll_get_size(doubly_linked_list_t* list)
 void
 dll_free(doubly_linked_list_t** pp_list)
 {
-    int pas = 0;
+    unsigned int pas = 0;
     dll_node_t *kill, *next;
     kill = (*pp_list)->head;
     while (pas < (*pp_list)->size) {
@@ -173,7 +174,7 @@ dll_free(doubly_linked_list_t** pp_list)
         pas++;
     }
     free(*pp_list);
-    *pp_list = NULL; 
+    *pp_list = NULL;
 }
 
 /*
@@ -184,7 +185,7 @@ dll_free(doubly_linked_list_t** pp_list)
 void
 dll_print_int_list(doubly_linked_list_t* list)
 {
-    int pas = 0;
+    unsigned int pas = 0;
     dll_node_t* print;
     print = list->head;
     while (pas < list->size) {
@@ -204,7 +205,7 @@ dll_print_int_list(doubly_linked_list_t* list)
 void
 dll_print_string_list(doubly_linked_list_t* list)
 {
-    int pas = 0;
+    unsigned int pas = 0;
     dll_node_t* print;
     print = list->head;
     while (pas < list->size) {

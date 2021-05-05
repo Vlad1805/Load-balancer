@@ -1,11 +1,14 @@
-#ifndef __CIRCULAR_DOUBLY_LINKED_LIST_H_
-#define __CIRCULAR_DOUBLY_LINKED_LIST_H_
+// Copyright 2021 Stanciu Vlad
+
+#ifndef CIRCULARDOUBLYLINKEDLIST_H_
+#define CIRCULARDOUBLYLINKEDLIST_H_
 
 typedef struct dll_node_t dll_node_t;
 struct dll_node_t
 {
-    void* data; /* Pentru ca datele stocate sa poata avea orice tip, folosim un
-                   pointer la void. */
+    void* data;
+    // Pentru ca datele stocate sa poata avea orice tip, folosim un
+    // pointer la void.
     dll_node_t *prev, *next;
 };
 
@@ -51,4 +54,4 @@ dll_print_ints_left_circular(dll_node_t* start);
 
 void
 dll_print_ints_right_circular(dll_node_t* start);
-#endif /* __CIRCULAR_DOUBLY_LINKED_LIST_H_*/
+#endif  // CIRCULARDOUBLYLINKEDLIST_H_

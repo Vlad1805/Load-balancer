@@ -1,12 +1,9 @@
-/*
- * Hashtable.c
- * Alexandru-Cosmin Mihai
- */
+// Copyright 2021 Stanciu Vlad
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../utils.h"
+#include "utils.h"
 
 #include "Hashtable.h"
 
@@ -87,7 +84,7 @@ ht_create(unsigned int hmax, unsigned int (*hash_function)(void*),
     dict->hash_function = hash_function;
     dict->compare_function = compare_function;
     dict->buckets = calloc(dict->hmax, sizeof(linked_list_t*));
-    for (int i = 0 ; i < dict->hmax ; i++) {
+    for (unsigned int i = 0 ; i < dict->hmax ; i++) {
         dict->buckets[i] = ll_create(sizeof(info));
     }
     return dict;
@@ -126,10 +123,9 @@ ht_put(hashtable_t *ht, void *key, unsigned int key_size,
     new.key = calloc(1, key_size);
     new.value = calloc(1, value_size);
     memcpy(new.key, key, key_size);
-    memcpy(new.value,value, value_size);
+    memcpy(new.value, value, value_size);
     ht->size++;
     ll_add_nth_node(ht->buckets[hash], ht->buckets[hash]->size, &new);
-    ll_node_t *verif = ht->buckets[hash]->head;
 }
 
 void *
@@ -206,7 +202,7 @@ ht_remove_entry(hashtable_t *ht, void *key)
 void
 ht_free(hashtable_t *ht)
 {
-	for (int i = 0 ; i < ht->hmax ; i++) {
+	for (unsigned int i = 0 ; i < ht->hmax ; i++) {
         ll_node_t *curr = (ht->buckets[i])->head, *kill;
         while (curr != NULL) {
             curr = curr->next;
